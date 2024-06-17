@@ -23,3 +23,8 @@ Recording Surf Sessions can be useful when learning to improve form and techniqu
 
 * Surf Report
 
+# Technolgies
+
+* Python
+* Django
+* Ultralytics YOLOv8
