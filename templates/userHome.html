@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% load static %}
+    {% include 'navbar.html' %}
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1 class="fs-1 fw-lighter ">Welcome {{ first_name }}!</h1>
+    {% if reels %}
+    <div class="container p-4" style="background-color: #e6f2ff;">
+
+    <h2 class="fs-1 fw-lighter">Reels</h2> <hr/><div class="scrollable-container" style="max-height: 500px; overflow-x: auto;"><div class="row"><div class="col right-col d-flex flex-nowrap">
+
+
+    {% for reel in reels %}
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'update_reel_name' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Reel</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="reel_title" value="{{ reel.title }}">
+          <input class="form-control" type="text" name="new_reel" value="{{ reel.title }}" aria-label="New Reel Name">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="float-div text-nowrap">
+     <div class="card" style="width: 18rem; display: inline-block; margin-right: 10px;">
+                <video controls  class="card-img-top">
+
+                    <source src="../{{ reel.url }}" type="video/mp4">
+                </video>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <p class="mr-auto">{{ reel.title|slice:":-4"}}</p>
+                    <div class="btn-group" >
+
+                    <button type="button" class="btn btn-outline-secondary btn-sm" >
+                      <img src="{% static 'download3.png' %}" alt="Custom Image">
+                   </button>
+                   <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      <img src="{% static 'edit.png' %}" alt="Custom Image">
+
+                   </button>
+                    </div>
+
+                    
+                </div>
+
+
+            </div>
+</div>
+    {% endfor %}
+
+        </div>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="container p-4" style="background-color: #e6f2ff;">
+
+<h2 class="fs-1 fw-lighter"> Raw Videos</h2><hr/>
+    {% if videos %}
+
+    {% for video in videos %}
+     <div class="card" style="width: 18rem; display: inline-block; margin-right: 10px;">
+                <video controls  class="card-img-top">
+
+                    <source src="../media/{{video.url}}" type="video/mp4">
+                </video>
+                <div class="card-body">
+
+                    <p class="card-text">{{ video.title }}</p>
+                    <form action= {% url 'process_video' %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="video_url" value = "media/{{ video.url }}">
+                        <button type="submit" class="btn btn-outline-primary">Choose Video</button>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+    {% endfor %}
+
+
+        {% else %}
+        <p>Upload videos to create clips! <a href = '{% url 'upload' %}'>Upload</a></p>
+{% endif %}
+    </div>
+
+    <div class="container p-4" style="background-color: #e6f2ff;">
+    {% if surf_spot is None %}
+             <h2 class="fs-1 fw-lighter">Surf Forecast</h2>
+            <p>Add your home surf break for daily surf forecast! <a href = '{% url 'settings' %}'>Settings</a></p>
+    {% else %}
+            <h2 class="fs-1 fw-lighter">Surf Forecast: {{ surf_spot.name}}</h2>
+            <div class = "container">
+                <h3>Today:</h3>
+                {% if report %}
+                <div class="container-fluid">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"> </th>
+                        <th scope="col">Surf (ft)</th>
+                        <th scope="col">Weather</th>
+                        <th scope="col">Water Temp</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for hour in report %}
+                      <tr>
+                        <th scope="row">{{ hour.time }}</th>
+                        <td>{{hour.waveLow}}-{{hour.waveHigh}}+</td>
+                        <td>{{ hour.airTemp}}°f</td>
+                        <td>{{ hour.waterTemp}}°f</td>
+
+
+
+                        
+                      </tr>
+                    
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                {% endif %}
+            </div>
+
+    {% endif %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<html>
+    
+    <head>
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        {% load static %}
+        {% include 'navbar.html' %}
+        <title> User Profile Settings</title>
+    </head>
+    <style>
+        h3 {
+            padding-top: 2rem;
+           
+        }
+        
+      
+      
+    </style>
+    <body>
+        <h1 style = "padding-top: 2rem; padding-bottom: 1rem;"> Settings</h1>
+        <h3>Your Surf Break</h3>
+        <hr/>
+        <form method="post" >
+            {% csrf_token %}  
+            <div class="mb-3"> 
+              <label for="preferred_spot" class="form-label">Preferred Surf Spot</label>
+              <select class="form-select col-md-6 " id="preferred_spot" name="preferred_spot">
+                {% for spot in surf_spots %}
+                  <option value="{{ spot.name }}" {% if user_spot.pk == spot.pk %}selected{% endif %}>{{ spot.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Preference</button>
+          </form>
+          {% if user_spot is None %} 
+          <p>You haven't chosen a preferred surf spot yet.</p>
+          {% else %}
+          <p>Your preferred surf spot: {{ user_spot.name }}</p>
+        {% endif %}
+
+
+        <h3>Social Media</h3>
+        <hr/>
+        <p>Connect Using Social Media</p>
+        </body>   
+
+</html>

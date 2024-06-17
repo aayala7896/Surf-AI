@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Surfer Positions</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        <h1>Surfer graphical representation</h1>
+        <div id="plot"></div>
+        <script>
+          
+            var surfersPositions = JSON.parse('{{ surfers_positions|escapejs }}');
+            var xPositions = surfersPositions.map(function(position) { return position[0]; });
+            var yPositions = surfersPositions.map(function(position) { return position[1]; });
+    
+            var data = [{
+                x: xPositions,
+                y: yPositions,
+                mode: 'lines',
+                type: 'scatter',
+                marker: {
+                    color: 'blue',  
+                    size: 10  
+                }
+            }];
+            var layout = {
+                title: 'Surfer Positions',  
+                xaxis: { title: 'Frame', range: [0, 1280] },  
+                yaxis: { title: 'Y Position' }   
+            };
+            Plotly.newPlot('plot', data, layout);  
+        </script>
+    </body>
+</html>
